@@ -1,0 +1,233 @@
+import tkinter as tk
+from tkinter import filedialog, messagebox
+import pandas as pd
+import matplotlib.pyplot as plt
+
+class MealPlanningApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Meal Planning and Nutrition Tracker")
+
+        # UI components
+        self.label = tk.Label(root, text="Upload a CSV File with Meal Data")
+        self.label.pack(pady=10)
+
+        self.upload_button = tk.Button(root, text="Browse File", command=self.browse_file)
+        self.upload_button.pack(pady=5)
+
+        self.summary_button = tk.Button(root, text="Show Summary", command=self.show_summary)
+        self.summary_button.pack(pady=5)
+
+        self.bar_chart_button = tk.Button(root, text="Show Bar Graph by Meal Type", command=self.show_bar_graph)
+        self.bar_chart_button.pack(pady=5)
+
+        self.pie_chart_button = tk.Button(root, text="Show Pie Chart by Meal Type", command=self.show_pie_chart)
+        self.pie_chart_button.pack(pady=5)
+
+        self.filepath = None
+        self.meal_data = None
+
+    def browse_file(self):
+        # Open file dialog to select a CSV file
+        self.filepath = filedialog.askopenfilename(
+            title="Open CSV File",
+            filetypes=[("CSV Files", "*.csv")]
+        )
+        if self.filepath:
+            self.label.config(text=f"Selected File: {self.filepath}")
+            try:
+                # Attempt to read the CSV file
+                self.meal_data = pd.read_csv(self.filepath, on_bad_lines='warn')
+                
+                # Print column names for debugging
+                print("Columns in the CSV file:", self.meal_data.columns.tolist())
+                
+            except Exception as e:
+messagebox.showerror("Error", f"Failed to read CSV file: {e}")
+ def show_summary(self):
+        if self.meal_data is None:
+            messagebox.showerror("Error", "Please select a file first!")
+            return
+
+        # Ensure necessary columns exist
+        if 'Meal Type' not in self.meal_data.columns or 'Calories' not in self.meal_data.columns:
+            messagebox.showerror("Error", "'Meal Type' or 'Calories' column not found in the CSV file.")
+            return
+        
+        # Display summary statistics
+        total_meals = len(self.meal_data)
+        total_calories = self.meal_data['Calories'].sum()
+        average_calories = self.meal_data['Calories'].mean()
+        
+        summary_text = (
+            f"Total Meals: {total_meals}\n"
+            f"Total Calories: {total_calories}\n"
+            f"Average Calories per Meal: {average_calories:.2f}"
+        )
+
+        messagebox.showinfo("Meal Summary", summary_text)
+
+    def show_bar_graph(self):
+        if self.meal_data is None:
+            messagebox.showerror("Error", "Please select a file first!")
+            return
+
+        # Ensure 'Meal Type' column exists
+        if 'Meal Type' not in self.meal_data.columns:
+            messagebox.showerror("Error", "'Meal Type' column not found in the CSV file.")
+            return
+        
+        # Count the number of meals by type
+        meal_counts = self.meal_data['Meal Type'].value_counts()
+
+        # Plot the bar graph
+        plt.figure(figsize=(10, 6))
+        meal_counts.plot(kind='bar', color='lightgreen')
+        plt.title('Number of Meals by Type')
+        plt.xlabel('Meal Type')
+        plt.ylabel('Number of Meals')
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
+
+        # Display the plot
+        plt.show()
+
+    def show_pie_chart(self):
+        if self.meal_data is None:
+            messagebox.showerror("Error", "Please select a file first!")
+            return
+
+        # Ensure 'Meal Type' column exists
+        if 'Meal Type' not in self.meal_data.columns:
+            messagebox.showerror("Error", "'Meal Type' column not found in the CSV file.")
+            return
+        
+        # Count the number of meals by type
+        meal_counts = self.meal_data['Meal Type'].value_counts()
+
+        # Plot the pie chart
+        plt.figure(figsize=(8, 8))
+        meal_counts.plot(kind='pie', autopct='%1.1f%%', startangle=90, colors=plt.cm.Paired(range(len(meal_counts))))
+        plt.title('Meal Distribution by Type')
+        plt.ylabel('')  # Remove y-label
+
+        # Display the plot
+        plt.show()
+
+# Run the application
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = MealPlanningApp(root)
+    root.mainloop()
+  # UI components
+    self.label = tk.Label(root, text="Upload a CSV File with Meal Data")
+    self.label.pack(pady=10)
+
+    self.upload_button = tk.Button(root, text="Browse File", command=self.browse_file)
+    self.upload_button.pack(pady=5)
+
+    self.summary_button = tk.Button(root, text="Show Summary", command=self.show_summary)
+    self.summary_button.pack(pady=5)
+
+    self.bar_chart_button = tk.Button(root, text="Show Bar Graph by Meal Type", command=self.show_bar_graph)
+    self.bar_chart_button.pack(pady=5)
+
+    self.pie_chart_button = tk.Button(root, text="Show Pie Chart by Meal Type", command=self.show_pie_chart)
+    self.pie_chart_button.pack(pady=5)
+
+    elf.filepath = None
+    self.meal_data = None
+
+    def browse_file(self):
+        # Open file dialog to select a CSV file
+        self.filepath = filedialog.askopenfilename(
+            title="Open CSV File",
+            filetypes=[("CSV Files", "*.csv")]
+        )
+        if self.filepath:
+            self.label.config(text=f"Selected File: {self.filepath}")
+            try:
+                # Attempt to read the CSV file
+                self.meal_data = pd.read_csv(self.filepath, on_bad_lines='warn')
+                
+                # Print column names for debugging
+                print("Columns in the CSV file:", self.meal_data.columns.tolist())
+                
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to read CSV file: {e}")
+
+    def show_summary(self):
+        if self.meal_data is None:
+            messagebox.showerror("Error", "Please select a file first!")
+            return
+
+        # Ensure necessary columns exist
+        if 'Meal Type' not in self.meal_data.columns or 'Calories' not in self.meal_data.columns:
+            messagebox.showerror("Error", "'Meal Type' or 'Calories' column not found in the CSV file.")
+            return
+        
+        # Display summary statistics
+        total_meals = len(self.meal_data)
+        total_calories = self.meal_data['Calories'].sum()
+        average_calories = self.meal_data['Calories'].mean()
+        
+        summary_text = (
+            f"Total Meals: {total_meals}\n"
+            f"Total Calories: {total_calories}\n"
+            f"Average Calories per Meal: {average_calories:.2f}"
+        )
+
+        messagebox.showinfo("Meal Summary", summary_text)
+
+    def show_bar_graph(self):
+        if self.meal_data is None:
+            messagebox.showerror("Error", "Please select a file first!")
+            return
+
+        # Ensure 'Meal Type' column exists
+        if 'Meal Type' not in self.meal_data.columns:
+            messagebox.showerror("Error", "'Meal Type' column not found in the CSV file.")
+            return
+        
+        # Count the number of meals by type
+        meal_counts = self.meal_data['Meal Type'].value_counts()
+
+        # Plot the bar graph
+        plt.figure(figsize=(10, 6))
+        meal_counts.plot(kind='bar', color='lightgreen')
+        plt.title('Number of Meals by Type')
+        plt.xlabel('Meal Type')
+        plt.ylabel('Number of Meals')
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
+
+        # Display the plot
+        plt.show()
+
+    def show_pie_chart(self):
+        if self.meal_data is None:
+            messagebox.showerror("Error", "Please select a file first!")
+            return
+
+        # Ensure 'Meal Type' column exists
+        if 'Meal Type' not in self.meal_data.columns:
+            messagebox.showerror("Error", "'Meal Type' column not found in the CSV file.")
+            return
+        
+        # Count the number of meals by type
+        meal_counts = self.meal_data['Meal Type'].value_counts()
+
+        # Plot the pie chart
+        plt.figure(figsize=(8, 8))
+        meal_counts.plot(kind='pie', autopct='%1.1f%%', startangle=90, colors=plt.cm.Paired(range(len(meal_counts))))
+        plt.title('Meal Distribution by Type')
+        plt.ylabel('')  # Remove y-label
+
+        # Display the plot
+        plt.show()
+
+# Run the application
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = MealPlanningApp(root)
+    root.mainloop()
